@@ -10,36 +10,6 @@ class Jeu:
         for i in range(31, 51):
             self.pions.append(Pion(i, 'white'))
 
-    # def print(self):
-    #     plateau = [[' ']*10 for i in range(10)]
-
-    #     for pion in self.pions:
-    #         if(pion.color == 'black'):
-    #             if(pion.pos%10 > 5 or pion.pos%10 == 0):
-    #                 line = math.ceil(pion.pos/5) - 1
-    #                 mod = pion.pos%10
-    #                 if(mod == 0): mod = 10
-    #                 col = (mod - 6) * 2
-    #                 plateau[line][col] = 'x'
-    #             else:
-    #                 line = math.ceil(pion.pos/5) - 1
-    #                 col = pion.pos%10 * 2 - 1
-    #                 plateau[line][col] = 'x'
-    #         else:
-    #             if(pion.pos%10 > 5 or pion.pos%10 == 0):
-    #                 line = math.ceil(pion.pos/5) - 1
-    #                 mod = pion.pos%10
-    #                 if(mod == 0): mod = 10
-    #                 col = (mod - 6) * 2
-    #                 plateau[line][col] = 'o'
-    #             else:
-    #                 line = math.ceil(pion.pos/5) - 1
-    #                 col = pion.pos%10 * 2 - 1
-    #                 plateau[line][col] = 'o'
-
-    #     for line in plateau:
-    #         print(line)
-
     def deplacementBase(self, pion):
         res = []
         isPairline = pion.pos%10 <= 5
