@@ -3,6 +3,7 @@ from deplacement import Deplacement
 import math
 
 class Jeu:
+    #! Voir dans le sujet pour la représentation du plateau
     def __init__(self):
         self.pions = []
         for i in range(1, 21):
@@ -74,8 +75,6 @@ class Jeu:
                 if self.getColorAtPos(finalPos) == None : return Deplacement(finalPos, pos2)
     
         return None
-        
-       
 
     def getDeplacementPossibles(self, pion):
         res = []
