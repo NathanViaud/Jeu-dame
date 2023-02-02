@@ -73,8 +73,7 @@ class Jeu:
                 print('down left');
                 finalPos = pos1 + 9
                 if self.getColorAtPos(finalPos) == None : return Deplacement(finalPos, pos2)
-    
-        return None
+        return res
 
     def getDeplacementPossibles(self, pion):
         res = []

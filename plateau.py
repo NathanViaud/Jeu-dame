@@ -10,7 +10,7 @@ class Plateau:
     def __str__(self) -> str:
         return str(self.plateau)
     
-    def deplacementBase(self, posPion):
+    def deplacementBase(self, posPion: int) -> list:
         res = []
         isPairline = posPion%10 <= 5
         isLeftOutside = posPion%5 == 1 and not isPairline
@@ -31,7 +31,7 @@ class Plateau:
                 res.append(possiblePos)
         return res
     
-    def eliminationPossible(self, pos1, pos2):
+    def eliminationPossible(self, pos1: int, pos2: int) -> tuple:
         res = None
         isPairline = pos1%10 <= 5
         isUpward = pos1 > pos2
@@ -54,7 +54,7 @@ class Plateau:
                 if self.plateau[finalPos] == None : return (finalPos, pos2)
         return res
     
-    def deplacementPossible(self, posPion):
+    def deplacementsPossible(self, posPion: int) -> list:
         res = []
         self.cacheEliminations = []
         baseDeplacements = self.deplacementBase(posPion)
@@ -68,8 +68,8 @@ class Plateau:
                     res.append(elimination[0])
         return res
     
-    def deplacer(self, posPion, newPos):
-        if newPos in self.deplacementPossible(posPion):
+    def deplacer(self, posPion: int, newPos: int):
+        if newPos in self.deplacementsPossible(posPion):
             self.plateau[newPos] = self.plateau[posPion]
             self.plateau[posPion] = None
 
@@ -77,6 +77,5 @@ class Plateau:
             for elimination in self.cacheEliminations:
                 if elimination[0] == newPos:
                     self.plateau[elimination[1]] = None
-
-p1 = Plateau()
-print(p1.deplacementPossible(31))
+                    return elimination[1]
+            return None
