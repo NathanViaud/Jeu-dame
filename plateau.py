@@ -6,20 +6,23 @@ class Plateau:
             self.plateau[i] = (0, False)
         for i in range(31, 51):
             self.plateau[i] = (1, False)
+
+    def __str__(self) -> str:
+        return str(self.plateau)
     
     def deplacementBase(self, posPion):
         res = []
         isPairline = posPion%10 <= 5
         isLeftOutside = posPion%5 == 1 and not isPairline
         isRightOutside = posPion%5 == 0 and isPairline
-        if(self.plateau[posPion][0] == 1 or self.plateau[posPion][1]):
+        if(self.plateau[posPion][0] == 0 or self.plateau[posPion][1]):
             if(not isRightOutside):
                 possiblePos = posPion + 6 if isPairline else posPion + 5
                 res.append(possiblePos)
             if(not isLeftOutside):
                 possiblePos = posPion + 5 if isPairline else posPion + 4
                 res.append(possiblePos)
-        if(self.plateau[posPion][0] == 0 or self.plateau[posPion][1]):
+        if(self.plateau[posPion][0] == 1 or self.plateau[posPion][1]):
             if(not isLeftOutside):
                 possiblePos = posPion - 5 if isPairline else posPion - 6
                 res.append(possiblePos)
@@ -54,8 +57,8 @@ class Plateau:
     def deplacementPossible(self, posPion):
         res = []
         self.cacheEliminations = []
-        baseDeplacemnts = self.deplacementBase(posPion)
-        for deplacement in baseDeplacemnts:
+        baseDeplacements = self.deplacementBase(posPion)
+        for deplacement in baseDeplacements:
             if self.plateau[deplacement] == None:
                 res.append(deplacement)
             else:
@@ -74,3 +77,6 @@ class Plateau:
             for elimination in self.cacheEliminations:
                 if elimination[0] == newPos:
                     self.plateau[elimination[1]] = None
+
+p1 = Plateau()
+print(p1.deplacementPossible(31))
