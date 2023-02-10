@@ -8,6 +8,8 @@ class GraphicPlateau:
         self.deplacementsPossibles = []
         self.canvas = None
         self.listePions = []
+        self.turn = 0
+        self.turnLabel = None
 
     def afficher_plateau(self):
         fenetre = tk.Tk()
@@ -15,6 +17,9 @@ class GraphicPlateau:
 
         self.canvas = tk.Canvas(fenetre, width=600, height=600)
         self.canvas.pack()
+
+        self.turnLabel = tk.Label(fenetre, text="Tour du joueur 1", font=("Arial", 20))
+        self.turnLabel.pack()
 
         for i in range(10):
             for j in range(10):
@@ -93,7 +98,7 @@ class GraphicPlateau:
             self.canvas.itemconfig(self.listeRect[ligne + colonne * 10], fill="lightgrey")
         self.deplacementsPossibles = []
 
-        if(idcase % 1 == 0 and movement == False):
+        if(idcase % 1 == 0 and movement == False and self.plateau.plateau[round(idcase)][0] == self.turn):
             dp = self.plateau.deplacementsPossible(round(idcase))
             self.colorie(dp)
             self.selectedPion = idcase
@@ -107,8 +112,12 @@ class GraphicPlateau:
             self.deplacementsPossibles.append(deplacement)
     
     def deplacer(self, deplacement):
-        print('selected pion', round(self.selectedPion))
-        print('deplacement', deplacement)
+        if self.turn == 0:
+            self.turnLabel.config(text="Tour du joueur 2")
+            self.turn = 1
+        else:
+            self.turnLabel.config(text="Tour du joueur 1")
+            self.turn = 0
 
         coords = [
             self.get_col(self.selectedPion) * 50 + 10,
@@ -140,6 +149,7 @@ class GraphicPlateau:
             for pion in self.listePions:
                 if(self.canvas.coords(pion) == coordsElimination):
                     self.canvas.delete(pion)
+            
 
     
 window = GraphicPlateau()
