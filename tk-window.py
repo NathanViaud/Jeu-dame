@@ -2,6 +2,8 @@ import tkinter as tk
 from plateau import Plateau
 from ia import IA
 
+import sys
+
 class GraphicPlateau:
     def __init__(self):
         self.plateau = Plateau()
@@ -11,7 +13,19 @@ class GraphicPlateau:
         self.listePions = []
         self.turn = 0
         self.turnLabel = None
-        self.iaPlayer = 1
+        if(len(sys.argv) > 1):
+            if(sys.argv[1] == '1'):
+                self.iaPlayer = 0
+                print('ia is player 1')
+            elif(sys.argv[1] == '2'):
+                self.iaPlayer = 1
+                print('ia is player 2')
+            else:
+                self.iaPlayer = None
+                print('no ia')
+        else: 
+            self.iaPlayer = None
+            print('no ia')
 
     def afficher_plateau(self):
         fenetre = tk.Tk()
@@ -45,7 +59,7 @@ class GraphicPlateau:
 
         #? If the player 1 is an IA
         if(self.iaPlayer == 0):
-            move = ia.play(self.plateau, True)
+            move = ia.play(self.plateau.plateau, True)
             self.deplacer(move[1], move[0])
 
         # Afficher la fenêtre
@@ -184,7 +198,7 @@ class GraphicPlateau:
                 print('ia ne peut pas jouer')
             else:
                 self.deplacer(move[1], move[0])
-                
+
         if(self.plateau.plateau.count((0, False)) + self.plateau.plateau.count((0, True)) == 0):
             print('joueur 2 a gagné')
             self.turnLabel.config(text="Joueur 2 à gagné")
