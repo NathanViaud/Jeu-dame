@@ -11,7 +11,7 @@ class GraphicPlateau:
         self.listePions = []
         self.turn = 0
         self.turnLabel = None
-        self.iaPlayer = 0
+        self.iaPlayer = 1
 
     def afficher_plateau(self):
         fenetre = tk.Tk()
@@ -149,14 +149,11 @@ class GraphicPlateau:
             self.get_lig(deplacement) * 50 + 40
         ]
 
-        # (dame, elimination) = self.plateau.deplacer(round(self.selectedPion), deplacement)
         (dame, elimination) = self.plateau.deplacer(initPos, deplacement)
 
         for pion in self.listePions:
             if(self.canvas.coords(pion) == coords):
                 self.canvas.coords(pion, finalCoords)
-
-        # print('dame : ', dame, 'elimination : ', elimination)
 
         if(dame != None):
             coordsDame = [
@@ -182,13 +179,12 @@ class GraphicPlateau:
 
         if(self.iaPlayer != None and self.turn == self.iaPlayer):
             isIAFirstPlayer = False if self.iaPlayer == 1 else True
-            move = ia.play(self.plateau, isIAFirstPlayer)
+            move = ia.play(self.plateau.plateau, isIAFirstPlayer)
             if(move == None):
                 print('ia ne peut pas jouer')
             else:
                 self.deplacer(move[1], move[0])
-            # print(print(self.plateau.getPlateau()))
-            # print(self.ia.play(self.plateau.getPlateau()[0], False))
+                
         if(self.plateau.plateau.count((0, False)) + self.plateau.plateau.count((0, True)) == 0):
             print('joueur 2 a gagné')
             self.turnLabel.config(text="Joueur 2 à gagné")
