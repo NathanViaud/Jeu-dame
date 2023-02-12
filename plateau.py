@@ -88,10 +88,14 @@ class Plateau:
             self.plateau[newPos] = self.plateau[posPion]
             self.plateau[posPion] = None
 
+            dame = None
+            elimination = None
+
             #? Transformation en dame
             if (newPos in range(1, 6) and self.plateau[newPos][0] == 0) or (newPos in range(46, 51) and self.plateau[newPos][0] == 1):
                 self.plateau[newPos] = (self.plateau[newPos][0], True)
                 print("Dame !", newPos)
+                dame = newPos
 
             #? Elimination
             for elimination in self.cacheEliminations:
@@ -99,5 +103,10 @@ class Plateau:
                     self.plateau[elimination[1]] = None
                     print('Elimination !')
                     print('pion restants: ', self.plateau.count((0, False)) + self.plateau.count((1, False)))
-                    return elimination[1]
-            return None
+                    elimination = elimination[1]
+                    break
+            return (dame, elimination)
+        
+        
+    def getPlateau(self):
+        return self.plateau

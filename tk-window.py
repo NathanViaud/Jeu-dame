@@ -1,5 +1,6 @@
 import tkinter as tk
 from plateau import Plateau
+from ia import IA
 
 class GraphicPlateau:
     def __init__(self):
@@ -10,6 +11,7 @@ class GraphicPlateau:
         self.listePions = []
         self.turn = 0
         self.turnLabel = None
+        self.iaPlayer = 0
 
     def afficher_plateau(self):
         fenetre = tk.Tk()
@@ -41,8 +43,14 @@ class GraphicPlateau:
 
         self.canvas.bind("<Button-1>", self.pion_clique)
 
+        #? If the player 1 is an IA
+        if(self.iaPlayer == 0):
+            move = ia.play(self.plateau, True)
+            self.deplacer(move[1], move[0])
+
         # Afficher la fenêtre
         fenetre.mainloop()
+
     
     def get_id_case(self, ligne, colonne):
         if(ligne % 2 == 0):
@@ -86,12 +94,17 @@ class GraphicPlateau:
         movement = False
 
         # verifying before reset deplacementsPossibles
+
+        #! Ici aussi peut être
         if(idcase % 1 == 0):
             for deplacement in self.deplacementsPossibles :
                 if(deplacement == idcase):
                     self.deplacer(deplacement)
                     movement = True
-        
+
+        # This erase the green cases
+
+        #! Il faut trouver le bug ici qui return une erreur
         for case in self.deplacementsPossibles:
             colonne = self.get_col(case)
             ligne = self.get_lig(case)
@@ -111,7 +124,7 @@ class GraphicPlateau:
             self.canvas.itemconfig(self.listeRect[ligne + colonne * 10], fill="green")
             self.deplacementsPossibles.append(deplacement)
     
-    def deplacer(self, deplacement):
+    def deplacer(self, deplacement, initPos = None):
         if self.turn == 0:
             self.turnLabel.config(text="Tour du joueur 2")
             self.turn = 1
@@ -119,11 +132,14 @@ class GraphicPlateau:
             self.turnLabel.config(text="Tour du joueur 1")
             self.turn = 0
 
+        if(initPos == None):
+            initPos = round(self.selectedPion)
+
         coords = [
-            self.get_col(self.selectedPion) * 50 + 10,
-            self.get_lig(self.selectedPion) * 50 + 10,
-            self.get_col(self.selectedPion) * 50 + 40,
-            self.get_lig(self.selectedPion) * 50 + 40
+            self.get_col(initPos) * 50 + 10,
+            self.get_lig(initPos) * 50 + 10,
+            self.get_col(initPos) * 50 + 40,
+            self.get_lig(initPos) * 50 + 40
         ]
 
         finalCoords = [
@@ -133,11 +149,25 @@ class GraphicPlateau:
             self.get_lig(deplacement) * 50 + 40
         ]
 
+        # (dame, elimination) = self.plateau.deplacer(round(self.selectedPion), deplacement)
+        (dame, elimination) = self.plateau.deplacer(initPos, deplacement)
+
         for pion in self.listePions:
             if(self.canvas.coords(pion) == coords):
                 self.canvas.coords(pion, finalCoords)
 
-        elimination = self.plateau.deplacer(round(self.selectedPion), deplacement)
+        # print('dame : ', dame, 'elimination : ', elimination)
+
+        if(dame != None):
+            coordsDame = [
+                self.get_col(dame) * 50 + 10,
+                self.get_lig(dame) * 50 + 10,
+                self.get_col(dame) * 50 + 40,
+                self.get_lig(dame) * 50 + 40
+            ]
+            for pion in self.listePions:
+                if(self.canvas.coords(pion) == coordsDame):
+                    self.canvas.itemconfig(pion, outline="red")
 
         if(elimination != None):
             coordsElimination = [
@@ -149,8 +179,25 @@ class GraphicPlateau:
             for pion in self.listePions:
                 if(self.canvas.coords(pion) == coordsElimination):
                     self.canvas.delete(pion)
-            
 
-    
+        if(self.iaPlayer != None and self.turn == self.iaPlayer):
+            isIAFirstPlayer = False if self.iaPlayer == 1 else True
+            move = ia.play(self.plateau, isIAFirstPlayer)
+            if(move == None):
+                print('ia ne peut pas jouer')
+            else:
+                self.deplacer(move[1], move[0])
+            # print(print(self.plateau.getPlateau()))
+            # print(self.ia.play(self.plateau.getPlateau()[0], False))
+        if(self.plateau.plateau.count((0, False)) + self.plateau.plateau.count((0, True)) == 0):
+            print('joueur 2 a gagné')
+            self.turnLabel.config(text="Joueur 2 à gagné")
+        elif(self.plateau.plateau.count((1, False)) + self.plateau.plateau.count((1, True)) == 0):
+            print('joueur 1 a gagné')
+            self.turnLabel.config(text="Joueur 1 à gagné")
+
+
+
+ia = IA()
 window = GraphicPlateau()
 window.afficher_plateau()
