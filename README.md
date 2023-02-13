@@ -22,3 +22,9 @@ python tk-window.py 1
 python tk-window.py 2
 
 ```
+
+### Authors
+Nathan VIAUD
+Mathis ENRICI
+Carlos CEREN
+Manuel HERNANDEZ
