@@ -180,7 +180,8 @@ class GraphicPlateau:
                 if(self.canvas.coords(pion) == coordsDame):
                     self.canvas.itemconfig(pion, outline="red")
 
-        if(elimination != None):
+        if(elimination != None and type(elimination) != tuple):
+            #print('elimnation not null !', elimination)
             coordsElimination = [
                 self.get_col(elimination) * 50 + 10,
                 self.get_lig(elimination) * 50 + 10,
